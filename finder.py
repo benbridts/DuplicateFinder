@@ -1,7 +1,8 @@
-# needs pyacoustid
+# needs pyacoustid and mutagen
 import acoustid
 import pprint
 import sys
+from mutagen.mp3 import MP3
 
 debug = False
 file_out = sys.stdout
@@ -41,7 +42,7 @@ if __name__ == "__main__" :
 
     debug = options.debug
     file_count = 0
-    unique_files = 0
+    different_files = 0
     dict = dict()
     output = list()
 
@@ -55,8 +56,15 @@ if __name__ == "__main__" :
 
     for key in dict :
         if len(dict[key]) > 1:
-            output.append(dict[key])
-        unique_files+=1
+            output_line = list()
+            for item in dict[key]:
+                audio = MP3(item)
+                bitrate = audio.info.bitrate
+                length = audio.info.length
+                output_line.append({'bitrate' : bitrate, 'lenght' : length, 'file' : item})
+            output_line = sorted(output_line)
+            output.append(output_line)
+        different_files+=1
 
     if options.file_out :
         file_out = file( options.file_out, "w" )
@@ -69,4 +77,4 @@ if __name__ == "__main__" :
 
     if options.verbose:
         print " files processed: ", file_count
-        print " unique files: " , unique_files
+        print " different files: " , different_files
