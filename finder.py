@@ -62,6 +62,9 @@ if __name__ == "__main__" :
         file_out = file( options.file_out, "w" )
         pprint.pprint(output,file_out,4)
         file_out.close()
+    else :
+        # just print it
+        print output
 
 
     if options.verbose:
