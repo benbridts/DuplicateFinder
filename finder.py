@@ -58,6 +58,8 @@ if __name__ == "__main__" :
         if len(dict[key]) > 1:
             output_line = list()
             for item in dict[key]:
+                if options.verbose :
+                    print "getting info for: " + item
                 audio = MP3(item)
                 bitrate = audio.info.bitrate
                 length = audio.info.length
