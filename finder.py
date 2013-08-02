@@ -2,6 +2,7 @@
 import acoustid
 import pprint
 import sys
+import os
 from mutagen.mp3 import MP3
 
 debug = False
@@ -49,12 +50,18 @@ if __name__ == "__main__" :
     if len( sys.argv ) > 1 :
         # read from a file(s)
 
-        for arg in args :
+        files_to_process = args
+        while files_to_process:
+            arg = files_to_process.pop()
             if options.verbose :
                 print "processing " + arg
-            if arg.strip().lower().endswith('.mp3'):
+            if os.path.isdir(arg):
+                files_to_process.extend([os.path.join(arg, fname)
+                                         for fname in os.listdir(arg)])
+            elif arg.strip().lower().endswith('.mp3'):
                 process_file( arg, dict )
-
+            elif options.verbose :
+                print "not processing. wrong suffix: " + arg
     for key in dict :
         if len(dict[key]) > 1:
             output_line = list()
