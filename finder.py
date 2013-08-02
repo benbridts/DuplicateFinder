@@ -24,7 +24,7 @@ def process_file( file_name, dict ) :
     file_count += 1
 
 
-def optParser( args = None  ) :
+def optParser() :
     from optparse import OptionParser
 
     parser = OptionParser()
