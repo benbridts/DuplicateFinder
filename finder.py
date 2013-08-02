@@ -63,7 +63,7 @@ if __name__ == "__main__" :
                 audio = MP3(item)
                 bitrate = audio.info.bitrate
                 length = audio.info.length
-                output_line.append({'bitrate' : bitrate, 'lenght' : length, 'file' : item})
+                output_line.append({'bitrate' : bitrate, 'length' : length, 'file' : item})
             output_line = sorted(output_line)
             output.append(output_line)
         different_files+=1
