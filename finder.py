@@ -1,8 +1,8 @@
 # needs pyacoustid and mutagen
 import acoustid
-import pprint
 import sys
 import os
+import json
 from mutagen.mp3 import MP3
 
 debug = False
@@ -78,11 +78,11 @@ if __name__ == "__main__" :
 
     if options.file_out :
         file_out = file( options.file_out, "w" )
-        pprint.pprint(output,file_out,4)
+        json.dump(output, file_out, indent=4)
         file_out.close()
     else :
-        # just print it
-        print output
+        # just print it (as JSON for easy parsability)
+        print json.dumps(output, indent=4)
 
 
     if options.verbose:
