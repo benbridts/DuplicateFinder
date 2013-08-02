@@ -78,8 +78,10 @@ if __name__ == "__main__" :
 
     if options.file_out :
         file_out = file( options.file_out, "w" )
-        json.dump(output, file_out, indent=4)
-        file_out.close()
+        try:
+            json.dump(output, file_out, indent=4)
+        finally:
+            file_out.close()
     else :
         # just print it (as JSON for easy parsability)
         print json.dumps(output, indent=4)
