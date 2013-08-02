@@ -1,7 +1,8 @@
 # needs pyacoustid and mutagen
 import acoustid
-import pprint
 import sys
+import os
+import json
 from mutagen.mp3 import MP3
 
 debug = False
@@ -24,7 +25,7 @@ def process_file( file_name, dict ) :
     file_count += 1
 
 
-def optParser( args = None  ) :
+def optParser() :
     from optparse import OptionParser
 
     parser = OptionParser()
@@ -49,11 +50,18 @@ if __name__ == "__main__" :
     if len( sys.argv ) > 1 :
         # read from a file(s)
 
-        for arg in args :
+        files_to_process = args
+        while files_to_process:
+            arg = files_to_process.pop()
             if options.verbose :
                 print "processing " + arg
-            process_file( arg, dict )
-
+            if os.path.isdir(arg):
+                files_to_process.extend([os.path.join(arg, fname)
+                                         for fname in os.listdir(arg)])
+            elif arg.strip().lower().endswith('.mp3'):
+                process_file( arg, dict )
+            elif options.verbose :
+                print "not processing. wrong suffix: " + arg
     for key in dict :
         if len(dict[key]) > 1:
             output_line = list()
@@ -63,18 +71,20 @@ if __name__ == "__main__" :
                 audio = MP3(item)
                 bitrate = audio.info.bitrate
                 length = audio.info.length
-                output_line.append({'bitrate' : bitrate, 'lenght' : length, 'file' : item})
+                output_line.append({'bitrate' : bitrate, 'length' : length, 'file' : item})
             output_line = sorted(output_line)
             output.append(output_line)
         different_files+=1
 
     if options.file_out :
         file_out = file( options.file_out, "w" )
-        pprint.pprint(output,file_out,4)
-        file_out.close()
+        try:
+            json.dump(output, file_out, indent=4)
+        finally:
+            file_out.close()
     else :
-        # just print it
-        print output
+        # just print it (as JSON for easy parsability)
+        print json.dumps(output, indent=4)
 
 
     if options.verbose:
