@@ -52,7 +52,8 @@ if __name__ == "__main__" :
         for arg in args :
             if options.verbose :
                 print "processing " + arg
-            process_file( arg, dict )
+            if arg.strip().lower().endswith('.mp3'):
+                process_file( arg, dict )
 
     for key in dict :
         if len(dict[key]) > 1:
